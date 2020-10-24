@@ -10,19 +10,5 @@
 }(window, document, 'script',
     'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '337782320833467');
+console.log('fb init')
 fbq('track', 'PageView');
-
-document.onreadystatechange = () => {
-    if (document.readyState === 'interactive') {
-        console.log('begin');
-        if (window.location.href.toString().includes('checkout/order-received')) {
-            var totalValue = document.getElementsByClassName('woocommerce-order-overview__total')[0];
-            totalValue = totalValue.getElementsByClassName('woocommerce-Price-amount')[0].innerText
-            totalValue = totalValue.replace('€', '').trim();
-            totalValue = parseFloat(totalValue);
-            fbq('track', 'Purchase', { value: totalValue, currency: 'EUR' });
-            console.log(totalValue);
-
-        }
-    }
-};
