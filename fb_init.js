@@ -10,5 +10,4 @@
 }(window, document, 'script',
     'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '337782320833467');
-console.log('fb init')
 fbq('track', 'PageView');
