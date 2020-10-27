@@ -37,7 +37,6 @@ function isCheckout() {
 
 function isFromCheckout() {
     let fromCheckout = getCookie('fromCheckout');
-    console.log('is from checkout');
     return fromCheckout == 'yes';
 }
 
@@ -53,7 +52,7 @@ function isProperOrder() {
 }
 
 function doStuff() {
-    if (isCheckout) {
+    if (isCheckout()) {
         setCookie('fromCheckout', 'yes', 1);
     } else if (isProperOrder()) {
         setCookie('fromCheckout', 'no', 1);
@@ -61,13 +60,13 @@ function doStuff() {
         totalValue = totalValue.getElementsByClassName('woocommerce-Price-amount')[0].innerText
         totalValue = totalValue.replace('€', '').trim();
         totalValue = parseFloat(totalValue);
+        console.log('Purchase log:', totalValue.toString());
         fbq('track', 'Purchase', { value: totalValue, currency: 'EUR' });
     } else {
         setCookie('fromCheckout', 'no', 1);
     }
 }
 
-setCookie('fromCheckout', 'no', 1);
 docReady(function() {
     doStuff();
 });
