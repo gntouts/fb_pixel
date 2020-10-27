@@ -6,11 +6,11 @@ It has 0 error tolerance and uses absolutely bad practices.
 ## Usage
 1. Clone or download.
 2. Change the values that correspond to your specific website:
-..- URL paths for cart and checkout
-..- Facebook Pixel ID
-..- Google Ads Tag 
-..- Desired Currency
-..- Selectors for the order value
+..* URL paths for cart and checkout
+..* Facebook Pixel ID
+..* Google Ads Tag 
+..* Desired Currency
+..* Selectors for the order value
 3. Create a Github release.
 4. Add the following lines to your website's head:
 ```
