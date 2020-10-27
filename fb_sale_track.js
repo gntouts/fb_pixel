@@ -67,6 +67,7 @@ function doStuff() {
     }
 }
 
+setCookie('fromCheckout', 'no', 1);
 docReady(function() {
     doStuff();
 });
