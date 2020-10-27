@@ -5,12 +5,12 @@ It has 0 error tolerance and uses absolutely bad practices.
 
 ## Usage
 1. Clone or download.
-2. Change the values that correspond to your specific website:
-...* URL paths for cart and checkout
-...* Facebook Pixel ID
-...* Google Ads Tag 
-...* Desired Currency
-...* Selectors for the order value
+2. Edit the files and change the values with ones that correspond to your website: <br>
+ -URL paths for cart and checkout<br>
+ -Facebook Pixel ID<br>
+ -Google Ads Tag <br>
+ -Desired Currency<br>
+ -Selectors for the order value<br>
 3. Create a Github release.
 4. Add the following lines to your website's head:
 ```
