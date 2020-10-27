@@ -62,6 +62,12 @@ function doStuff() {
         totalValue = parseFloat(totalValue);
         console.log('Purchase log:', totalValue.toString());
         fbq('track', 'Purchase', { value: totalValue, currency: 'EUR' });
+        gtag('event', 'conversion', {
+            'send_to': 'AW-617519608/TCN3CNKtj-QBEPizuqYC',
+            'value': totalValue,
+            'currency': 'EUR',
+            'transaction_id': ''
+        });
     } else {
         setCookie('fromCheckout', 'no', 1);
     }
