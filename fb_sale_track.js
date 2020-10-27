@@ -28,19 +28,6 @@ function getCookie(cname) {
     return "";
 }
 
-function deleteMyCookie() {
-    let myCookie = document.cookie;
-    let x = myCookie.split(';');
-    let temp = '';
-    for (i = 0; i < x.length; i++) {
-        if (x[i].includes('fromCheckout')) {
-            temp = x[i];
-        }
-    }
-    myCookie = myCookie.replace(temp, '');
-    document.cookie = myCookie;
-}
-
 function isCheckout() {
     let myURL = window.location.href.toString();
     let myLastParameter = myURL.split('/');
@@ -69,14 +56,14 @@ function doStuff() {
     if (isCheckout) {
         setCookie('fromCheckout', 'yes', 1);
     } else if (isProperOrder()) {
-        deleteMyCookie();
+        setCookie('fromCheckout', 'no', 1);
         let totalValue = document.getElementsByClassName('woocommerce-order-overview__total')[0];
         totalValue = totalValue.getElementsByClassName('woocommerce-Price-amount')[0].innerText
         totalValue = totalValue.replace('€', '').trim();
         totalValue = parseFloat(totalValue);
         fbq('track', 'Purchase', { value: totalValue, currency: 'EUR' });
     } else {
-        deleteMyCookie();
+        setCookie('fromCheckout', 'no', 1);
     }
 }
 
