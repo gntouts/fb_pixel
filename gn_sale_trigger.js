@@ -51,6 +51,26 @@ function isProperOrder() {
     return isFromCheckout() && isOrderReceived();
 }
 
+function addToCartFromList(element) {
+    let prodId = element.getAttribute('data-product_id');
+    let price = element.parentElement.parentElement;
+    let name = price.getElementsByTagName('h2')[0].innerText;
+    price = price.getElementsByTagName('ins')[0].getElementsByClassName('woocommerce-Price-amount')[0].firstChild.data;
+    price = parseFloat(price);
+    let params = { content_name: name, content_type: 'product', content_ids: [prodId], value: price, currency: "EUR" };
+    fbq('track', 'AddToCart', params);
+}
+
+function doAddToCartStuff() {
+    var addToCartButtons = document.getElementsByClassName('add_to_cart_button');
+    Array.from(addToCartButtons).forEach(element => {
+        element.addEventListener('click', function() {
+            addToCartFromList(element)
+        })
+
+    });
+}
+
 function doStuff() {
     if (isCheckout()) {
         setCookie('fromCheckout', 'yes', 1);
@@ -74,5 +94,10 @@ function doStuff() {
 }
 
 docReady(function() {
+    var isProductPage = Array.from(document.getElementsByTagName('body')[0].classList).includes('single-product') && Array.from(document.getElementsByTagName('body')[0].classList).includes('single');
+
+    if (!isProductPage) {
+        doAddToCartStuff();
+    }
     doStuff();
 });
