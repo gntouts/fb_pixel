@@ -83,7 +83,7 @@ function doAddToCartPageStuff() {
 
 function addToCartFromPage(element) {
     let prodId = element.getAttribute('value');
-    let price = document.getElementsByClassName('rey-innerSummary')[0].getElementsByTagName('ins')[0].getElementsByClassName('woocommerce-Price-amount')[0].firstChild.data;
+    let price = parseFloat(document.getElementsByClassName('rey-innerSummary')[0].getElementsByTagName('ins')[0].getElementsByClassName('woocommerce-Price-amount')[0].firstChild.data);
     let name = document.getElementsByClassName('rey-productTitle-wrapper')[0].innerText;
     let params = { content_name: name, content_type: 'product', content_ids: [prodId], value: price, currency: "EUR" };
     fbq('track', 'AddToCart', params);
