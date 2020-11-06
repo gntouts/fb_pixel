@@ -118,7 +118,7 @@ docReady(function() {
     if (!isProductPage) {
         doAddToCartListStuff();
     } else {
-
+        doAddToCartPageStuff();
     }
     doStuff();
 });
