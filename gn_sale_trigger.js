@@ -61,7 +61,7 @@ function addToCartFromList(element) {
     fbq('track', 'AddToCart', params);
 }
 
-function doAddToCartStuff() {
+function doAddToCartListStuff() {
     var addToCartButtons = document.getElementsByClassName('add_to_cart_button');
     Array.from(addToCartButtons).forEach(element => {
         element.addEventListener('click', function() {
@@ -69,6 +69,25 @@ function doAddToCartStuff() {
         })
 
     });
+}
+
+function doAddToCartPageStuff() {
+    var addToCartButtons = document.getElementsByClassName('single_add_to_cart_button');
+    Array.from(addToCartButtons).forEach(element => {
+        element.addEventListener('click', function() {
+            addToCartFromPage(element)
+        })
+
+    });
+}
+
+function addToCartFromPage(element) {
+    let prodId = element.getAttribute('value');
+    let price = document.getElementsByClassName('rey-innerSummary')[0].getElementsByTagName('ins')[0].getElementsByClassName('woocommerce-Price-amount')[0].firstChild.data;
+    let name = document.getElementsByClassName('rey-productTitle-wrapper')[0].innerText;
+    let params = { content_name: name, content_type: 'product', content_ids: [prodId], value: price, currency: "EUR" };
+    fbq('track', 'AddToCart', params);
+
 }
 
 function doStuff() {
@@ -97,7 +116,9 @@ docReady(function() {
     var isProductPage = Array.from(document.getElementsByTagName('body')[0].classList).includes('single-product') && Array.from(document.getElementsByTagName('body')[0].classList).includes('single');
 
     if (!isProductPage) {
-        doAddToCartStuff();
+        doAddToCartListStuff();
+    } else {
+
     }
     doStuff();
 });
