@@ -102,7 +102,6 @@ function covid19() {
 
 function doStuff() {
     if (isCheckout()) {
-        covid19();
         setCookie('fromCheckout', 'yes', 1);
     } else if (isProperOrder()) {
         setCookie('fromCheckout', 'no', 1);
@@ -125,7 +124,9 @@ function doStuff() {
 
 docReady(function() {
     var isProductPage = Array.from(document.getElementsByTagName('body')[0].classList).includes('single-product') && Array.from(document.getElementsByTagName('body')[0].classList).includes('single');
-
+    if (isCheckout()) {
+        covid19();
+    }
     if (!isProductPage) {
         doAddToCartListStuff();
     } else {
