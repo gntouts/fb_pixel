@@ -91,13 +91,13 @@ function addToCartFromPage(element) {
 }
 
 function covid19() {
-    let thisparent = document.getElementsByClassName('woocommerce-terms-and-conditions-wrapper')[0];
-    let x = document.createElement('div');
-    x.classList = 'gn-courier-delay';
+    console.log('covid19 initiated');
+    let thisparent = document.getElementsByClassName('woocommerce-privacy-policy-text')[0];
+    console.log(thisparent);
     let p = document.createElement('p');
+    p.classList = 'gn-courier-delay';
     p.innerText = 'Σας ενημερώνουμε ότι λόγω της κατάστασης με τον Covid-19 και τα μέτρα που έχουν ληφθεί για την αντιμετώπισή του, οι χρόνοι παράδοσης των προϊόντων από τις εταιρείες Courier είναι μεγαλύτεροι από τους συνηθισμένους. Σας ευχαριστούμε για την κατανόηση σας. '
-    x.appendChild(p);
-    thisparent.appendChild(x);
+    thisparent.appendChild(p);
 }
 
 function doStuff() {
