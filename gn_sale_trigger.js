@@ -102,10 +102,8 @@ function covid19() {
 
 function doStuff() {
     if (isCheckout()) {
-        document.body.addEventListener('scroll', () => {
-            console.log('Checkout Page');
-            covid19();
-        }, { once: true });
+        console.log('Checkout Page');
+        covid19();
         setCookie('fromCheckout', 'yes', 1);
     } else if (isProperOrder()) {
         setCookie('fromCheckout', 'no', 1);
