@@ -90,8 +90,19 @@ function addToCartFromPage(element) {
 
 }
 
+function covid19() {
+    let thisparent = document.getElementsByClassName('woocommerce-terms-and-conditions-wrapper')[0];
+    let x = document.createElement('div');
+    x.classList = 'gn-courier-delay';
+    let p = document.createElement('p');
+    p.innerText = 'Σας ενημερώνουμε ότι λόγω της κατάστασης με τον Covid-19 και τα μέτρα που έχουν ληφθεί για την αντιμετώπισή του, οι χρόνοι παράδοσης των προϊόντων από τις εταιρείες Courier είναι μεγαλύτεροι από τους συνηθισμένους. Σας ευχαριστούμε για την κατανόηση σας. '
+    x.appendChild(p);
+    thisparent.appendChild(x);
+}
+
 function doStuff() {
     if (isCheckout()) {
+        covid19();
         setCookie('fromCheckout', 'yes', 1);
     } else if (isProperOrder()) {
         setCookie('fromCheckout', 'no', 1);
