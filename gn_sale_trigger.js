@@ -124,9 +124,6 @@ function doStuff() {
 
 docReady(function() {
     var isProductPage = Array.from(document.getElementsByTagName('body')[0].classList).includes('single-product') && Array.from(document.getElementsByTagName('body')[0].classList).includes('single');
-    if (isCheckout()) {
-        covid19();
-    }
     if (!isProductPage) {
         doAddToCartListStuff();
     } else {
@@ -134,3 +131,9 @@ docReady(function() {
     }
     doStuff();
 });
+
+document.body.addEventListener('scroll', () => {
+    if (isCheckout()) {
+        covid19();
+    }
+}, { once: true });
