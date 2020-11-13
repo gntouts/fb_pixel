@@ -18,4 +18,3 @@
     'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '337782320833467');
 fbq('track', 'PageView');
-g

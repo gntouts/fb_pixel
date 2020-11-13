@@ -55,10 +55,7 @@ function addToCartFromList(element) {
     let prodId = element.getAttribute('data-product_id');
     let outer = element.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
     let name = outer.getElementsByTagName('h5')[0].innerText;
-
-    let price = element.parentElement.parentElement;
-    let name = price.getElementsByTagName('h2')[0].innerText;
-    price = outer.getElementsByTagName('ins')[0].getElementsByClassName('woocommerce-Price-amount')[0].firstChild.data;
+    let price = outer.getElementsByTagName('ins')[0].getElementsByClassName('woocommerce-Price-amount')[0].firstChild.data;
     price = parseFloat(price);
     let params = { content_name: name, content_type: 'product', content_ids: [prodId], value: price, currency: "EUR" };
     fbq('track', 'AddToCart', params);
