@@ -1,6 +1,6 @@
-! function(f, b, e, v, n, t, s) {
+! function (f, b, e, v, n, t, s) {
     if (f.fbq) return;
-    n = f.fbq = function() {
+    n = f.fbq = function () {
         n.callMethod ?
             n.callMethod.apply(n, arguments) : n.queue.push(arguments)
     };
@@ -35,12 +35,37 @@ function isHomePage() {
     return myURL === 'https://homeone.gr';
 }
 
+
+function getProductId() {
+    let id = Array.from(document.querySelector('body').classList);
+    id = id.filter(className => className.includes('postid'))[0];
+    id = id.replace('postid-', '');
+    return id;
+}
+
+function getCategory() {
+    let cat = document.querySelector('nav.rey-breadcrumbs');
+    cat = cat.textContent;
+    cat = cat.split('›');
+    if (isCategoryPage()) {
+        cat = cat[cat.length - 1];
+    }
+    else if (isProductPage()) {
+        cat = cat[cat.length - 2];
+    }
+    return cat;
+}
+
 function trackCategoryView() {
-    console.log('ok')
+    let cat = document.querySelector('nav.rey-breadcrumbs');
+    cat = cat.textContent;
+    console.log(cat);
 }
 
 function trackProductView() {
-
+    let id = getProductId();
+    let category = getCategory();
+    console.log(id);
 }
 
 function trackViewContent() {
