@@ -36,7 +36,7 @@ function isHomePage() {
 }
 
 function trackCategoryView() {
-
+    console.log('ok')
 }
 
 function trackProductView() {
