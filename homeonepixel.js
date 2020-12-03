@@ -29,7 +29,7 @@ function getCookie(cname) {
 }
 
 
-function isCheckout() {
+function isCheckoutPage() {
     let myURL = window.location.href.toString();
     let myLastParameter = myURL.split('/');
     myLastParameter = myLastParameter[myLastParameter.length - 2];
@@ -42,7 +42,7 @@ function isFromCheckout() {
 }
 
 
-function isOrderReceived() {
+function isOrderReceivedPage() {
     let myURL = window.location.href.toString();
     let myLastParameter = myURL.split('/');
     myLastParameter = myLastParameter[myLastParameter.length - 3];
@@ -50,23 +50,9 @@ function isOrderReceived() {
 }
 
 function isProperOrder() {
-    return isFromCheckout() && isOrderReceived();
+    return isFromCheckout() && isOrderReceivedPage();
 }
 
-function isProductPage() {
-    let myURL = window.location.href.toString();
-    return myURL.includes('/product/');
-}
-
-function isCategoryPage() {
-    let myURL = window.location.href.toString();
-    return myURL.includes('/product-category/');
-}
-
-function isHomePage() {
-    let myURL = window.location.href.toString();
-    return myURL === 'https://homeone.gr';
-}
 
 function getProductId() {
     let id = Array.from(document.querySelector('body').classList);
@@ -88,24 +74,43 @@ function getCategory() {
 }
 
 function trackCategoryView() {
-    let cat = document.querySelector('nav.rey-breadcrumbs');
-    cat = cat.textContent;
-    console.log(cat);
+    let cat = document.querySelector('meta[property="og:title"]');
+    cat = cat.content.replace('– Home one', '').replace('  ', '');
+    fbq('track', 'ViewContent', { content_name: cat });
 }
 
 function trackProductView() {
     let id = getProductId();
     let category = getCategory();
-    console.log(id);
+    let prodName = document.querySelector('meta[property="og:title"]').content;
+    let price = document.querySelector('meta[property="product:sale_price:amount"]').content;
+    price = parseInt(price);
+    let content = { content_name: prodName, content_category: category, content_ids: [id], content_type: 'product', value: price, currency: 'EUR' };
+    fbq('track', 'ViewContent', content);
+}
+
+function isProductPage() {
+    let myURL = window.location.href.toString();
+    return myURL.includes('/product/');
+}
+
+function isCategoryPage() {
+    let myURL = window.location.href.toString();
+    return myURL.includes('/product-category/');
+}
+
+function isHomePage() {
+    let myURL = window.location.href.toString();
+    return myURL === 'https://homeone.gr';
 }
 
 function trackViewContent() {
     if (isHomePage()) {
         fbq('track', 'ViewContent', { content_name: 'Homepage' });
     } else if (isCategoryPage()) {
-        console.log('category');
+        trackCategoryView();
     } else if (isProductPage()) {
-        console.log('product');
+        trackProductView();
     }
 }
 
@@ -116,6 +121,18 @@ function categoryViewProcedure() {
             addToCartFromCategoryView(button)
         })
     });
+}
+
+function getProductContentFromCookieValue(value) {
+    let products = [];
+    let temp = value.split('-');
+
+    temp.forEach(function(product) {
+        let i = product.split('&')[0].replace('gnid:', '');
+        let q = product.split('&')[1].replace('q:', '');
+        products.push({ id: i, quantity: parseInt(q) })
+    })
+    return products
 }
 
 function addToCartFromCategoryView(element) {
@@ -155,19 +172,48 @@ function productViewProcedure() {
     var addToCartButtons = Array.from(document.getElementsByClassName('single_add_to_cart_button'));
     addToCartButtons.forEach(button => {
         button.addEventListener('click', function() {
-            addToCartFromPage(button)
+            addToCartFromProductView(button)
         })
     });
 }
+/**
+ * mainProcedure description
+ * @return {boolean}      The Main Procedure
+ */
+function mainProcedure() {
+    if (isCheckoutPage()) {
+        console.log('Checkout Page');
+        setCookie('fromCheckout', 'yes', 1);
+    } else if (isProperOrder()) {
+        setCookie('fromCheckout', 'no', 1);
+        let totalValue = document.getElementsByClassName('woocommerce-order-overview__total')[0];
+        totalValue = totalValue.getElementsByClassName('woocommerce-Price-amount')[0].innerText
+        totalValue = totalValue.replace('€', '').trim();
+        totalValue = parseFloat(totalValue);
+        console.log('Purchase log:', totalValue.toString());
+        let gnfbp = getCookie('gnfbp');
+        let cookieContents = getProductContentFromCookieValue(gnfbp);
+        // contents - i have to split gnfb and create the data fo the pixel tracking
+        setCookie('gnfbp', '', 2);
+        fbq('track', 'Purchase', { value: totalValue, currency: 'EUR', contents: cookieContents, content_type: 'product' });
+        gtag('event', 'conversion', {
+            'send_to': 'AW-617519608/TCN3CNKtj-QBEPizuqYC',
+            'value': totalValue,
+            'currency': 'EUR',
+            'transaction_id': ''
+        });
+    } else {
+        setCookie('fromCheckout', 'no', 1);
+        trackViewContent();
+    }
+}
+
 
 docReady(function() {
     if (!isProductPage()) {
-        // category/list view
         categoryViewProcedure();
     } else {
-        // product view
         productViewProcedure();
-        doAddToCartPageStuff();
     }
-    doStuff();
+    mainProcedure();
 });
