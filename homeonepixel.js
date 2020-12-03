@@ -156,7 +156,7 @@ function addToCartFromProductView(element) {
     let prodId = element.getAttribute('value');
     let price = parseFloat(document.getElementsByClassName('rey-innerSummary')[0].getElementsByTagName('ins')[0].getElementsByClassName('woocommerce-Price-amount')[0].firstChild.data);
     let name = document.getElementsByClassName('rey-productTitle-wrapper')[0].innerText;
-    let quantity = document.querySelector('div.quantity input[type=number]')
+    let quantity = document.querySelector('div.quantity input[type=number]').value;
     let params = { content_name: name, content_type: 'product', contents: [{ id: prodId, quantity: quantity }], value: price, currency: "EUR" };
     let gnfbp = getCookie('gnfbp');
     if (gnfbp != '') {
