@@ -128,8 +128,8 @@ function getProductContentFromCookieValue(value) {
     let temp = value.split('-');
 
     temp.forEach(function(product) {
-        let i = product.split('&')[0].replace('gnid:', '');
-        let q = product.split('&')[1].replace('q:', '');
+        let i = product.split('&')[0].replace('gnpid:', '');
+        let q = product.split('&')[1].replace('gnq:', '');
         products.push({ id: i, quantity: parseInt(q) })
     })
     return products
