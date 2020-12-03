@@ -152,7 +152,7 @@ function addToCartFromCategoryView(element) {
     fbq('track', 'AddToCart', params);
 }
 
-function addToCartFromProductView() {
+function addToCartFromProductView(element) {
     let prodId = element.getAttribute('value');
     let price = parseFloat(document.getElementsByClassName('rey-innerSummary')[0].getElementsByTagName('ins')[0].getElementsByClassName('woocommerce-Price-amount')[0].firstChild.data);
     let name = document.getElementsByClassName('rey-productTitle-wrapper')[0].innerText;
