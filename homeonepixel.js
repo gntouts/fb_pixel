@@ -161,9 +161,9 @@ function addToCartFromProductView(element) {
     let params = { content_name: name, content_type: 'product', content_ids: [prodId], quantity: q, value: price * q, currency: "EUR" };
     let gnfbp = getCookie('gnfbp');
     if (gnfbp != '') {
-        gnfbp = gnfbp + '-' + 'gnpid:' + prodId.toString() + '&gnq:' + quantity.toString();
+        gnfbp = gnfbp + '-' + 'gnpid:' + prodId.toString() + '&gnq:' + q.toString();
     } else {
-        gnfbp = 'gnpid:' + prodId.toString() + '&gnq:' + quantity.toString();
+        gnfbp = 'gnpid:' + prodId.toString() + '&gnq:' + q.toString();
     }
     setCookie('gnfbp', gnfbp, 2);
     fbq('track', 'AddToCart', params);
