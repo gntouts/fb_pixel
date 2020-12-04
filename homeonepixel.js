@@ -31,9 +31,7 @@ function getCookie(cname) {
 
 function isCheckoutPage() {
     let myURL = window.location.href.toString();
-    let myLastParameter = myURL.split('/');
-    myLastParameter = myLastParameter[myLastParameter.length - 2];
-    return myLastParameter == 'checkout';
+    return myURL.includes('/checkout/');
 }
 
 function isFromCheckout() {
@@ -46,7 +44,7 @@ function isOrderReceivedPage() {
     let myURL = window.location.href.toString();
     let myLastParameter = myURL.split('/');
     myLastParameter = myLastParameter[myLastParameter.length - 3];
-    return myLastParameter == 'order-received';
+    return myURL.includes('/order-received/')
 }
 
 function isProperOrder() {
@@ -142,38 +140,31 @@ function addToCartFromCategoryView(element) {
     price = price.getElementsByTagName('ins')[0].getElementsByClassName('woocommerce-Price-amount')[0].firstChild.data;
     price = parseFloat(price);
     let params = { content_name: name, content_type: 'product', content_ids: [prodId], value: price, currency: "EUR" };
-    let gnfbp = getCookie('gnfbp');
-    if (gnfbp != '') {
-        gnfbp = gnfbp + '-' + 'gnpid:' + prodId.toString() + '&gnq:1'
-    } else {
-        gnfbp = 'gnpid:' + prodId.toString() + '&gnq:1'
-    }
-    setCookie('gnfbp', gnfbp, 2);
+    // let gnfbp = getCookie('gnfbp');
+    // if (gnfbp != '') {
+    //     gnfbp = gnfbp + '-' + 'gnpid:' + prodId.toString() + '&gnq:1'
+    // } else {
+    //     gnfbp = 'gnpid:' + prodId.toString() + '&gnq:1'
+    // }
+    // setCookie('gnfbp', gnfbp, 2);
     fbq('track', 'AddToCart', params);
 }
 
-function addToCartFromProductView(element) {
+function addToCartFromProductPage(element) {
     let prodId = element.getAttribute('value');
     let price = parseFloat(document.getElementsByClassName('rey-innerSummary')[0].getElementsByTagName('ins')[0].getElementsByClassName('woocommerce-Price-amount')[0].firstChild.data);
     let name = document.getElementsByClassName('rey-productTitle-wrapper')[0].innerText;
     let q = document.querySelector('div.quantity input[type=number]').value;
     q = parseInt(q);
     let params = { content_name: name, content_type: 'product', content_ids: [prodId], quantity: q, value: price * q, currency: "EUR" };
-    let gnfbp = getCookie('gnfbp');
-    if (gnfbp != '') {
-        gnfbp = gnfbp + '-' + 'gnpid:' + prodId.toString() + '&gnq:' + q.toString();
-    } else {
-        gnfbp = 'gnpid:' + prodId.toString() + '&gnq:' + q.toString();
-    }
-    setCookie('gnfbp', gnfbp, 2);
     fbq('track', 'AddToCart', params);
 }
 
-function productViewProcedure() {
+function productPageProcedure() {
     var addToCartButtons = Array.from(document.getElementsByClassName('single_add_to_cart_button'));
     addToCartButtons.forEach(button => {
         button.addEventListener('click', function() {
-            addToCartFromProductView(button)
+            addToCartFromProductPage(button);
         })
     });
 }
@@ -181,7 +172,7 @@ function productViewProcedure() {
  * mainProcedure description
  * @return {boolean}      The Main Procedure
  */
-function mainProcedure() {
+function oldMain() {
     if (isCheckoutPage()) {
         console.log('Checkout Page');
         setCookie('fromCheckout', 'yes', 1);
@@ -192,11 +183,11 @@ function mainProcedure() {
         totalValue = totalValue.replace('€', '').trim();
         totalValue = parseFloat(totalValue);
         console.log('Purchase log:', totalValue.toString());
-        let gnfbp = getCookie('gnfbp');
-        let cookieContents = getProductContentFromCookieValue(gnfbp);
+        // let gnfbp = getCookie('gnfbp');
+        // let cookieContents = getProductContentFromCookieValue(gnfbp);
         // contents - i have to split gnfb and create the data fo the pixel tracking
-        setCookie('gnfbp', '', 2);
-        fbq('track', 'Purchase', { value: totalValue, currency: 'EUR', contents: cookieContents, content_type: 'product' });
+        // setCookie('gnfbp', '', 2);
+        // fbq('track', 'Purchase', { value: totalValue, currency: 'EUR', contents: cookieContents, content_type: 'product' });
         gtag('event', 'conversion', {
             'send_to': 'AW-617519608/TCN3CNKtj-QBEPizuqYC',
             'value': totalValue,
@@ -206,6 +197,99 @@ function mainProcedure() {
     } else {
         setCookie('fromCheckout', 'no', 1);
         trackViewContent();
+    }
+}
+
+function setCookieFromMiniCart() {
+    let products = '';
+    setCookie('gnfbp', products, 1);
+    let cartItems = Array.from(document.querySelectorAll('li.woocommerce-mini-cart-item.mini_cart_item'));
+    cartItems.forEach(function() {
+        let prId = item.querySelector('a.remove.remove_from_cart_button').getAttribute('data-product_id');
+        let prQ = item.querySelector('span.quantity').innerText.split(' ×')[0];
+        let temp = 'gnpid:' + prId.toString() + '&' + 'q:' + prQ.toString();
+        products += temp + ';';
+    })
+    if (products != '') {
+        products = products.slice(0, -1);
+        setCookie('gnfbp', products, 1);
+    }
+}
+
+function getMiniCartRemoveButtons() {
+    return Array.from(document.querySelectorAll('ul.woocommerce-mini-cart a.remove.remove_from_cart_button'));
+}
+
+function miniCartButtonsProc() {
+    setCookieFromMiniCart();
+    getMiniCartRemoveButtons().forEach(button => {
+        button.addEventListener('click', function() {
+            setTimeout(miniCartButtonsProc, 500);
+        })
+    });
+}
+
+
+function getListViewAddToCartButtons() {
+    return Array.from(document.querySelectorAll('li.product a.button.add_to_cart_button.ajax_add_to_cart'));
+}
+
+function listViewAddToCartProc() {
+    getListViewAddToCartButtons().forEach(button => {
+        button.addEventListener('click', function() {
+            addToCartFromCategoryView(button);
+            setTimeout(miniCartButtonsProc, 500);
+        })
+    });
+}
+
+function defaultShopProc() {
+    // remove form cart function
+    miniCartButtonsProc();
+    // add to cart function
+    listViewAddToCartProc();
+}
+
+function addToCartFromProductPage(element) {
+    let prodId = element.getAttribute('value');
+    let price = parseFloat(document.getElementsByClassName('rey-innerSummary')[0].getElementsByTagName('ins')[0].getElementsByClassName('woocommerce-Price-amount')[0].firstChild.data);
+    let name = document.getElementsByClassName('rey-productTitle-wrapper')[0].innerText;
+    let q = document.querySelector('div.quantity input[type=number]').value;
+    q = parseInt(q);
+    let params = { content_name: name, content_type: 'product', content_ids: [prodId], quantity: q, value: price * q, currency: "EUR" };
+    fbq('track', 'AddToCart', params);
+}
+
+function productPageProc() {
+    var addToCartButtons = Array.from(document.getElementsByClassName('single_add_to_cart_button'));
+    addToCartButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            addToCartFromProductPage(button);
+            setTimeout(miniCartButtonsProc, 500);
+        })
+    });
+}
+
+function mainProcedure() {
+    if (isHomePage()) {
+        fbq('track', 'ViewContent', { content_name: 'Homepage' });
+        defaultShopProc();
+
+    } else if (isCategoryPage()) {
+        trackCategoryView();
+        defaultShopProc();
+    } else if (isProductPage()) {
+        trackProductView();
+        productPageProc();
+        defaultShopProc();
+    } else if (isCheckoutPage()) {
+
+
+
+    } else if (isProperOrder()) {
+
+    } else {
+
     }
 }
 
