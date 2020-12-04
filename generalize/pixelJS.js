@@ -208,3 +208,29 @@ docReady(function() {
     }
     mainProcedure();
 });
+
+
+// 
+// 
+// random test area
+
+let skroutzScripts = document.querySelectorAll('script[data-cfasync="false"]');
+skroutzScripts = Array.from(skroutzScripts);
+let selectedSkroutz = '';
+skroutzScripts.forEach(script => {
+    if (script.innerText.includes('revenue')) {
+        selectedSkroutz = script.innerText;
+    }
+})
+let order = selectedSkroutz.split(';')[0];
+let items = selectedSkroutz.split(';');
+items.pop();
+items.shift();
+
+let sItmes = [];
+items.forEach(item => {
+    temp = item.replace("skroutz_analytics('ecommerce', 'addItem', ", '')
+    temp = temp.slice(0, -1);;
+    temp = JSON.parse(temp)
+    sItmes.push(temp);
+})
