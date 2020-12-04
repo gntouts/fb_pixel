@@ -53,7 +53,7 @@ function setCookieFromMiniCart() {
     let products = '';
     setCookie('gnfbp', products, 1);
     let cartItems = Array.from(document.querySelectorAll('li.woocommerce-mini-cart-item.mini_cart_item'));
-    cartItems.forEach(function() {
+    cartItems.forEach(function(item) {
         let prId = item.querySelector('a.remove.remove_from_cart_button').getAttribute('data-product_id');
         let prQ = item.querySelector('span.quantity').innerText.split(' ×')[0];
         let temp = 'gnpid:' + prId.toString() + '&' + 'q:' + prQ.toString();
@@ -163,18 +163,28 @@ function addToCartFromProductPage(element) {
 }
 
 function monitorCartButtons() {
-    let updateButton = querySelector('div.wc-proceed-to-checkout a.checkout-button');
-    updateButton.addEventListener('click', function() {
-        setTimeout(setProductCookieFromCartList(), 500);
-        setTimeout(monitorCartButtons(), 200);
-    })
+    let updateButton = document.querySelector('div.wc-proceed-to-checkout a.checkout-button');
+    if (updateButton) {
+        updateButton.addEventListener('click', function() {
+            setTimeout(setProductCookieFromCartList(), 500);
+            setTimeout(monitorCartButtons(), 200);
+        })
+        let removeButtons = Array.from(document.querySelectorAll('a.remove'));
+        removeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                setTimeout(setProductCookieFromCartList(), 500);
+                setTimeout(monitorCartButtons(), 200);
+            })
+        });
+    }
 }
 
 function setProductCookieFromCartList() {
     products = '';
-    let productList = Array.from(document.querySelectorAll('form.woocommerce-cart-form tbody tr'));
+    let productList = Array.from(document.querySelectorAll('form.woocommerce-cart-form tbody tr.cart_item'));
     productList.forEach(product => {
-        let prId = product.querySelector(a.remove).getAttribute('data-product_id');
+        console.log(product);
+        let prId = product.querySelector("a.remove").getAttribute('data-product_id');
         let prQ = product.querySelector('td.product-quantity input').getAttribute('value');
         let temp = 'gnpid:' + prId.toString() + '&' + 'q:' + prQ.toString();
         products += temp + ';';
