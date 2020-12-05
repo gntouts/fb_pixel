@@ -39,7 +39,7 @@ function prodListAddToCart() {
             let prodId = button.getAttribute('data-product_id');
             let price = button.parentElement.parentElement;
             let name = price.querySelector('h2').innerText;
-            price = price.querySelector('ins').querySelector('.woocommerce-Price-amount')[0].firstChild.data;
+            price = price.querySelector('ins').querySelector('.woocommerce-Price-amount').firstChild.data;
             price = parseFloat(price);
             let params = { content_name: name, content_type: 'product', content_ids: [prodId], content: [{ id: prodId, quantity: 1, price: price }], value: price, currency: "EUR" };
             fbq('track', 'AddToCart', params);
