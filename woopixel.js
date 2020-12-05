@@ -142,7 +142,7 @@ function mainProcedure() {
             contents: contents, num_items: numItems, value: totalValue, currency: "EUR"
         };
         fbq('track', 'Purchase', params);
-
+        setCookie('fromCheckout', 'no', 1);
 
     } else if (url.includes('/order-received/')) {
         fbq('track', 'ViewContent', { content_name: 'Order Received Page' });
