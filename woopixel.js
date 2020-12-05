@@ -41,7 +41,7 @@ function prodListAddToCart() {
             let name = price.querySelector('h2').innerText;
             price = price.querySelector('ins').querySelector('.woocommerce-Price-amount').firstChild.data;
             price = parseFloat(price);
-            let params = { content_name: name, content_type: 'product', content_ids: [prodId], content: [{ id: prodId, quantity: 1, price: price }], value: price, currency: "EUR" };
+            let params = { content_name: name, content_type: 'product', content_ids: [prodId], contents: [{ id: prodId, quantity: 1, price: price }], value: price, currency: "EUR" };
             fbq('track', 'AddToCart', params);
         })
     });
@@ -101,7 +101,7 @@ function mainProcedure() {
     } else if (currentUrl.includes('/cart/')) {
         fbq('track', 'ViewContent', { content_name: 'Cart' });
         setCookie('fromCheckout', 'no', 1);
-    } else if (currentUrl.includes('/checkout/')) {
+    } else if (currentUrl.includes('/checkout/') && !currentUrl.includes('/order-received/')) {
         setCookie('fromCheckout', 'yes', 1);
         let totalValue = parseFloat(document.querySelector('#order_review tr.order-total span').innerText);
         let products = Array.from(document.querySelectorAll('#order_review tbody td.product-name > strong'));
