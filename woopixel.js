@@ -1,4 +1,4 @@
-function url() {
+function getCurrentUrl() {
     return window.location.href.toString()
 }
 
@@ -78,30 +78,30 @@ function trackProductViewAndProductCart() {
 }
 
 function mainProcedure() {
-    let url = url()
-    if (url === 'https://homeone.gr') {
+    let currentUrl = getCurrentUrl()
+    if (currentUrl === 'https://homeone.gr') {
         fbq('track', 'ViewContent', { content_name: 'Homepage' });
         prodListAddToCart();
         setCookie('fromCheckout', 'no', 1);
-    } else if (url.includes('/product-category/')) {
+    } else if (currentUrl.includes('/product-category/')) {
         let category = document.querySelector('meta[property="og:title"]').content.replace(' – Home one', '');
         fbq('track', 'ViewContent', { content_name: category });
         prodListAddToCart();
         setCookie('fromCheckout', 'no', 1);
-    } else if (url.includes('/product/')) {
+    } else if (currentUrl.includes('/product/')) {
         trackProductViewAndProductCart();
         prodListAddToCart();
         setCookie('fromCheckout', 'no', 1);
-    } else if (url.includes('/?s=')) {
+    } else if (currentUrl.includes('/?s=')) {
         let searchString = document.querySelector('meta[property="og:title"]').content.replace('” – Home one', '');
         searchString = searchString.replace('Αποτελέσματα για “', '');
         fbq('track', 'Search', { search_string: searchString });
         prodListAddToCart();
         setCookie('fromCheckout', 'no', 1);
-    } else if (url.includes('/cart/')) {
+    } else if (currentUrl.includes('/cart/')) {
         fbq('track', 'ViewContent', { content_name: 'Cart' });
         setCookie('fromCheckout', 'no', 1);
-    } else if (url.includes('/checkout/')) {
+    } else if (currentUrl.includes('/checkout/')) {
         setCookie('fromCheckout', 'yes', 1);
         let totalValue = parseFloat(document.querySelector('#order_review tr.order-total span').innerText);
         let products = Array.from(document.querySelectorAll('#order_review tbody td.product-name > strong'));
@@ -111,7 +111,7 @@ function mainProcedure() {
             numItems += temp;
         })
         fbq('track', 'InitiateCheckout', { value: totalValue, num_items: numItems, currency: 'EUR' });
-    } else if (url.includes('/order-received/') && getCookie('fromCheckout') == 'yes') {
+    } else if (currentUrl.includes('/order-received/') && getCookie('fromCheckout') == 'yes') {
         let skroutzScripts = Array.from(document.querySelectorAll('script[data-cfasync="false"]'));
         skroutzScripts = skroutzScripts.map(script => script.innerText);
         let selectedSkroutz = skroutzScripts.filter(script => script.includes('revenue'))[0];
@@ -144,7 +144,7 @@ function mainProcedure() {
         fbq('track', 'Purchase', params);
         setCookie('fromCheckout', 'no', 1);
 
-    } else if (url.includes('/order-received/')) {
+    } else if (currentUrl.includes('/order-received/')) {
         fbq('track', 'ViewContent', { content_name: 'Order Received Page' });
         setCookie('fromCheckout', 'no', 1);
     }
