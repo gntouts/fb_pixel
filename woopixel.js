@@ -69,7 +69,7 @@ function trackProductViewAndProductCart() {
             quantity = parseInt(quantity);
             let params = {
                 content_name: prodName, content_type: 'product', content_ids: [prodId],
-                contents: [{ id: prodId, quantity: quantity, price: price }],
+                contents: [{ id: id, quantity: quantity, price: price }],
                 quantity: quantity, value: price * quantity, currency: "EUR"
             };
             fbq('track', 'AddToCart', params);
