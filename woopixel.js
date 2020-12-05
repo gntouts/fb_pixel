@@ -68,7 +68,7 @@ function trackProductViewAndProductCart() {
             let quantity = document.querySelector('div.quantity input[type=number]').value;
             quantity = parseInt(quantity);
             let params = {
-                content_name: prodName, content_type: 'product', content_ids: [prodId],
+                content_name: prodName, content_type: 'product', content_ids: [id],
                 contents: [{ id: id, quantity: quantity, price: price }],
                 quantity: quantity, value: price * quantity, currency: "EUR"
             };
