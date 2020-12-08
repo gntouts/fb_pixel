@@ -1,4 +1,4 @@
-var pixelID = '337782320833467';
+var pixelID = '1264687297239092';
 var OGPageTitle = 'meta[property="og:title"]';
 
 // variables for prodListAddToCart() function
